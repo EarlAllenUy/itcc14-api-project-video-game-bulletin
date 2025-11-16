@@ -17,12 +17,12 @@
 
 ## 🧑‍💻 New Team Members 🧑‍💻
 
-| Name | GitHub Profile |
+| Name | 
 | :--- | :--- |
-| **** | [Link to GitHub Profile] |
-| **** | [Link to GitHub Profile] |
-| **** | [Link to GitHub Profile] |
-| **** | [Link to GitHub Profile] |
+| **** | 
+| **** | 
+| **** | 
+| **** |
 
 ---
 
