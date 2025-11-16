@@ -8,10 +8,10 @@
 
 | Name | GitHub Profile |
 | :--- | :--- |
-| **Alamo, Don Martin Raphael** | [Link to GitHub Profile] |
-| **Cruz, Niall Nevin** | [Link to GitHub Profile] |
-| **Uy, Earl Allen** | [Link to GitHub Profile] |
-| **Uyguangco, Kent Andrei** | [Link to GitHub Profile] |
+| **Alamo, Don Martin Raphael** | [Link to GitHub Profile](https://github.com/MartinAlamo20) |
+| **Cruz, Niall Nevin** | [Link to GitHub Profile](https://github.com/NiallCruz) |
+| **Uy, Earl Allen** | [Link to GitHub Profile](https://github.com/EarlAllenUy) |
+| **Uyguangco, Kent Andrei** | [Link to GitHub Profile](https://github.com/20230026875-glitch) |
 
 ---
 
