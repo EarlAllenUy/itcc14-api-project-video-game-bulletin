@@ -15,6 +15,12 @@
 
 ---
 
+## 🧑‍💻 Team Members
+* Cruz, Niall Nevin Cruz
+
+---
+
+
 ## 🎯 Project Overview & Initial Deliverables
 
 ### 📝 Problem Statement
