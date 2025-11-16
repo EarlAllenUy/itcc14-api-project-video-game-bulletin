@@ -17,7 +17,7 @@
 
 ## 🧑‍💻 Team Members
 * Cruz, Niall Nevin Cruz
-
+* Uyguangco, Kent Andrei L.
 ---
 
 
