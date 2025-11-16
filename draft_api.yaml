@@ -1,8 +1,7 @@
 openapi: 3.0.0
 info:
   title: Video Game Bulletin (VGB) API
-  description: 
-    A RESTful API serving real-time information for video game releases, supporting read, administrative CRUD, and interactive user features.
+  description: A RESTful API serving real-time information for video game releases, supporting read, administrative CRUD, and interactive user features.
   version: 1.0.0
 servers:
   - url: https://api.videogamebulletin.com/v1
@@ -173,6 +172,7 @@ paths:
                 items: { $ref: '#/components/schemas/Game' }
         '400': { $ref: '#/components/responses/BadRequest' }
 
+  # Consolidated '/games/{id}' endpoint (GET, PUT, DELETE)
   '/games/{id}':
     get:
       tags: [Games]
@@ -191,9 +191,10 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/Game' }
         '404': { $ref: '#/components/responses/NotFound' }
-
-    # The PUT and DELETE operations for this path must be aligned properly
-    # to be siblings of the GET operation.
+    
+    # ----------------------------------------------------------------------
+    # C. Administration Endpoints (Moved under the path)
+    # ----------------------------------------------------------------------
     put:
       tags: [Administration]
       summary: Admin-only. Update an existing game entry.
@@ -302,7 +303,7 @@ paths:
         '404': { $ref: '#/components/responses/NotFound' }
 
   # ----------------------------------------------------------------------
-  # C. Administration Endpoints (Milestone 2 & 3)
+  # C. Administration Endpoints (Continuation)
   # ----------------------------------------------------------------------
   
   '/games':
