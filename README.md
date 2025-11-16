@@ -15,8 +15,9 @@
 
 ---
 
-## 🧑‍💻 Team Members
+## 🧑‍💻 New Team Members
 * Cruz, Niall Nevin Cruz
+* Alamo, Don Martin Raphael
 * Uyguangco, Kent Andrei L.
 ---
 
