@@ -15,17 +15,6 @@
 
 ---
 
-## 🧑‍💻 New Team Members 🧑‍💻
-
-| Name | 
-| :--- |
-| **Earl Allen D. Uy** | 
-| **** | 
-| **** | 
-| **** |
-
----
-
 ## 🎯 Project Overview & Initial Deliverables
 
 ### 📝 Problem Statement
