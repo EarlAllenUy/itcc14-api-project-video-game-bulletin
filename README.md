@@ -15,6 +15,17 @@
 
 ---
 
+## 🧑‍💻 New Team Members 🧑‍💻
+
+| Name | GitHub Profile |
+| :--- | :--- |
+| **** | [Link to GitHub Profile] |
+| **** | [Link to GitHub Profile] |
+| **** | [Link to GitHub Profile] |
+| **** | [Link to GitHub Profile] |
+
+---
+
 ## 🎯 Project Overview & Initial Deliverables
 
 ### 📝 Problem Statement
