@@ -140,7 +140,7 @@ The core data models are designed to support the centralized nature and interact
 3.  **Validated Documentation:** The final API documentation is cross-validated against the live code base.
 
 ### Checklists
-* **[X] Implement Search/Filtering feature on the API level.** (The API contract is defined in **`api.yaml`**)
+* **[X] Implement Search/Filtering feature on the API level.** *(The API contract is defined in `api.yaml`)*
 * [ ] Integrate **Search/Filtering** UI elements on the front-end.
 * [ ] Execute comprehensive **QA Test Plan** (functional, security, and performance testing).
 * [ ] Validate that all **error responses** (400/404) are accurate and consistent.
