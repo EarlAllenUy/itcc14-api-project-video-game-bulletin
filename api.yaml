@@ -111,7 +111,6 @@ components:
       bearerFormat: JWT # Expected Firebase Authentication Token (Milestone 3)
   
   # --- REUSABLE RESPONSES ---
-  responses:
     Unauthorized:
       description: Authentication token is missing or invalid.
       content:
@@ -256,6 +255,50 @@ paths:
         '400': { $ref: '#/components/responses/BadRequest' }
         '409':
           description: Conflict (Email or username already exists).
+
+  /users/login:
+    post:
+      tags: [Users]
+      summary: Authenticate and log in a user. (Required by Functional Requirements)
+      operationId: userLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  description: Raw password used for authentication.
+      responses:
+        '200':
+          description: User successfully logged in. Returns the authentication token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: The JWT Bearer Token for authorization.
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': 
+          description: Invalid credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example: { code: 401, message: "Unauthorized: Invalid email or password." }
+
 
   '/users/{userId}/favorites':
     post:
