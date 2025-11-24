@@ -1,27 +1,335 @@
 openapi: 3.0.0
 info:
   title: Video Game Bulletin (VGB) API
-  description: A RESTful API serving real-time information for video game releases, supporting read, administrative CRUD, and interactive user features.
+  description: RESTful API for managing video game releases, user interactions, and reviews
   version: 1.0.0
+  contact:
+    name: Project VAUYL
+    email: vgb@example.com
+
 servers:
-  - url: https://api.videogamebulletin.com/v1
-    description: Production Server (Deployed)
-  - url: http://localhost:8080/v1
-    description: Local Development Server
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://video-game-bulletin.firebaseapp.com/api
+    description: Production server
 
 tags:
   - name: Games
-    description: Public endpoints for retrieving game release data.
-  - name: Administration
-    description: Admin-only endpoints for content management (CRUD).
+    description: Game release information endpoints
   - name: Users
-    description: User authentication and interactive features (Comments, Favorites).
+    description: User authentication and management
+  - name: Comments
+    description: User comments on games
+  - name: Favorites
+    description: User favorite games management
 
-# --- REUSABLE COMPONENTS (SCHEMAS, RESPONSES, SECURITY) ---
+paths:
+  /releases:
+    get:
+      tags:
+        - Games
+      summary: Get all upcoming and recent game releases
+      description: Retrieve list of games for calendar display
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Game'
+        '500':
+          description: Server error
+
+  /games:
+    post:
+      tags:
+        - Games
+      summary: Add new game (Admin only)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameInput'
+      responses:
+        '201':
+          description: Game created successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Admin only
+
+  /games/{id}:
+    get:
+      tags:
+        - Games
+      summary: Get specific game details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Game details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          description: Game not found
+
+    put:
+      tags:
+        - Games
+      summary: Update game information (Admin only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameInput'
+      responses:
+        '200':
+          description: Game updated successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Admin only
+        '404':
+          description: Game not found
+
+    delete:
+      tags:
+        - Games
+      summary: Delete game (Admin only)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Game deleted successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden - Admin only
+        '404':
+          description: Game not found
+
+  /users:
+    post:
+      tags:
+        - Users
+      summary: Register new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        '201':
+          description: User created successfully
+        '400':
+          description: Invalid input
+
+  /users/login:
+    post:
+      tags:
+        - Users
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Invalid credentials
+
+  /users/{userId}/favorites:
+    get:
+      tags:
+        - Favorites
+      summary: Get user's favorite games
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of favorite games
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Game'
+
+    post:
+      tags:
+        - Favorites
+      summary: Add game to favorites
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                game_id:
+                  type: string
+      responses:
+        '201':
+          description: Game added to favorites
+        '401':
+          description: Unauthorized
+
+  /games/{id}/comments:
+    get:
+      tags:
+        - Comments
+      summary: Get comments for a game
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+
+    post:
+      tags:
+        - Comments
+      summary: Post comment on game
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        '201':
+          description: Comment posted successfully
+        '401':
+          description: Unauthorized
+
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
-    # 1. Game Model (Core Data)
     Game:
+      type: object
+      properties:
+        game_id:
+          type: string
+        title:
+          type: string
+        release_date:
+          type: string
+          format: date
+        platforms:
+          type: array
+          items:
+            type: string
+        specifications:
+          type: object
+        genre:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    GameInput:
       type: object
       required:
         - title
@@ -29,31 +337,39 @@ components:
         - platforms
         - genre
       properties:
-        game_id:
-          type: string
-          readOnly: true
-          description: Unique Firebase Document ID.
         title:
           type: string
-          example: 'Elden Ring 2'
         release_date:
           type: string
           format: date
-          example: '2026-02-25'
         platforms:
           type: array
           items:
             type: string
-            enum: [PC, PS5, Xbox Series X, Switch]
         specifications:
           type: object
-          description: System requirements (CPU, GPU, RAM) data structure.
         genre:
           type: string
-          example: 'Action RPG'
-    
-    # 2. New User Registration Input
-    NewUser:
+        description:
+          type: string
+
+    User:
+      type: object
+      properties:
+        user_id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        is_admin:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    UserRegistration:
       type: object
       required:
         - username
@@ -62,264 +378,26 @@ components:
       properties:
         username:
           type: string
-          example: gamer_guru_01
         email:
           type: string
           format: email
-          example: user@example.com
         password:
           type: string
-          format: password
-          description: Raw password sent for Firebase Auth.
-    
-    # 3. Comment Input
-    NewComment:
-      type: object
-      required:
-        - content
-      properties:
-        content:
-          type: string
-          example: "I can't wait for this title, the graphics look amazing!"
+          minLength: 6
 
-    # 4. Favorite Request Input
-    FavoriteRequest:
+    Comment:
       type: object
-      required:
-        - game_id
       properties:
+        comment_id:
+          type: string
         game_id:
           type: string
-          description: The ID of the game the user wants to favorite.
-    
-    # 5. Generic Error Response
-    Error:
-      type: object
-      properties:
-        code:
-          type: integer
-          example: 400
-        message:
+        user_id:
           type: string
-          example: "Bad Request: Missing required field 'title'."
-
-  # --- REUSABLE SECURITY DEFINITIONS ---
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT # Expected Firebase Authentication Token (Milestone 3)
-  
-  # --- REUSABLE RESPONSES ---
-  responses:
-    Unauthorized:
-      description: Authentication token is missing or invalid.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example: { code: 401, message: "Unauthorized: Invalid token." }
-    Forbidden:
-      description: The user is authenticated but lacks necessary privileges (e.g., not an Admin).
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example: { code: 403, message: "Forbidden: Admin privilege required." }
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example: { code: 404, message: "Game with ID 'XYZ' not found." }
-    BadRequest:
-      description: Invalid or malformed request data.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-          example: { code: 400, message: "Bad Request: Malformed JSON or missing fields." }
-
-# --- API PATHS (ENDPOINTS) ---
-paths:
-  
-  # ----------------------------------------------------------------------
-  # A. Public Endpoints (Milestone 2 & 4)
-  # ----------------------------------------------------------------------
-  
-  /releases:
-    get:
-      tags: [Games]
-      summary: Retrieve a list of upcoming and newly released games (Main Calendar).
-      operationId: getReleases
-      parameters:
-        - in: query
-          name: genre
-          schema: { type: string }
-          description: Filter games by a specific genre (e.g., 'RPG'). (Milestone 4)
-        - in: query
-          name: search
-          schema: { type: string }
-          description: Search by partial game title. (Milestone 4)
-      responses:
-        '200':
-          description: Successfully retrieved list of games.
-          content:
-            application/json:
-              schema:
-                type: array
-                items: { $ref: '#/components/schemas/Game' }
-        '400': { $ref: '#/components/responses/BadRequest' }
-
-  # Consolidated '/games/{id}' endpoint (GET, PUT, DELETE)
-  '/games/{id}':
-    get:
-      tags: [Games]
-      summary: Retrieve detailed information for a specific game.
-      operationId: getGameById
-      parameters:
-        - in: path
-          name: id
-          schema: { type: string }
-          required: true
-          description: The ID of the game to retrieve.
-      responses:
-        '200':
-          description: Successfully retrieved game details.
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/Game' }
-        '404': { $ref: '#/components/responses/NotFound' }
-    
-    # ----------------------------------------------------------------------
-    # C. Administration Endpoints (Moved under the path)
-    # ----------------------------------------------------------------------
-    put:
-      tags: [Administration]
-      summary: Admin-only. Update an existing game entry.
-      operationId: updateGame
-      security: [ { bearerAuth: [] } ] # Requires Admin Bearer Token
-      parameters:
-        - in: path
-          name: id
-          schema: { type: string }
-          required: true
-          description: The ID of the game to update.
-      requestBody:
-        required: true
+        username:
+          type: string
         content:
-          application/json:
-            schema: { $ref: '#/components/schemas/Game' }
-      responses:
-        '200':
-          description: Game successfully updated.
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '403': { $ref: '#/components/responses/Forbidden' }
-        '404': { $ref: '#/components/responses/NotFound' }
-    
-    delete:
-      tags: [Administration]
-      summary: Admin-only. Delete a game entry.
-      operationId: deleteGame
-      security: [ { bearerAuth: [] } ] # Requires Admin Bearer Token
-      parameters:
-        - in: path
-          name: id
-          schema: { type: string }
-          required: true
-          description: The ID of the game to delete.
-      responses:
-        '204':
-          description: Game successfully deleted (No content).
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '403': { $ref: '#/components/responses/Forbidden' }
-        '404': { $ref: '#/components/responses/NotFound' }
-
-  # ----------------------------------------------------------------------
-  # B. User/Interactive Endpoints (Milestone 3)
-  # ----------------------------------------------------------------------
-  
-  /users:
-    post:
-      tags: [Users]
-      summary: Register a new user account.
-      operationId: registerUser
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/NewUser' }
-      responses:
-        '201':
-          description: User successfully registered. Returns a success message or user token.
-        '400': { $ref: '#/components/responses/BadRequest' }
-        '409':
-          description: Conflict (Email or username already exists).
-
-  '/users/{userId}/favorites':
-    post:
-      tags: [Users]
-      summary: Allows a registered user to add a game to their personal favorites list.
-      operationId: addFavoriteGame
-      security: [ { bearerAuth: [] } ] # Requires Bearer Token
-      parameters:
-        - in: path
-          name: userId
-          schema: { type: string }
-          required: true
-          description: The ID of the user performing the action.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/FavoriteRequest' }
-      responses:
-        '200':
-          description: Game successfully favorited.
-        '401': { $ref: '#/components/responses/Unauthorized' }
-
-  '/games/{id}/comments':
-    post:
-      tags: [Users]
-      summary: Allows a registered user to post a comment on a game.
-      operationId: postComment
-      security: [ { bearerAuth: [] } ] # Requires Bearer Token
-      parameters:
-        - in: path
-          name: id
-          schema: { type: string }
-          required: true
-          description: The ID of the game being commented on.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/NewComment' }
-      responses:
-        '201':
-          description: Comment successfully posted.
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '404': { $ref: '#/components/responses/NotFound' }
-
-  # ----------------------------------------------------------------------
-  # C. Administration Endpoints (Continuation)
-  # ----------------------------------------------------------------------
-  
-  '/games':
-    post:
-      tags: [Administration]
-      summary: Admin-only. Create a new game entry.
-      operationId: createGame
-      security: [ { bearerAuth: [] } ] # Requires Admin Bearer Token
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/Game' }
-      responses:
-        '201':
-          description: Game successfully created.
-        '401': { $ref: '#/components/responses/Unauthorized' }
-        '403': { $ref: '#/components/responses/Forbidden' } # User is authenticated but not an Admin
-        '400': { $ref: '#/components/responses/BadRequest' }
+          type: string
+        timestamp:
+          type: string
+          format: date-time

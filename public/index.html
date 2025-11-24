@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Game Bulletin - Home</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/auth-modal.css">
+</head>
+<body>
+  <header>
+  <div class="logo">
+    <img src="/images/VGB_Logo.png" alt="Logo" class="logo-img">
+    VIDEO GAME BULLETIN
+  </div>
+  <nav>
+    <a href="index.html" class="active">HOME</a>
+    <a href="calendar.html">CALENDAR</a>
+    <a href="reviews.html">REVIEWS</a>
+  </nav>
+  <div class="auth">
+    <span class="welcome">Log in to get started!</span>
+    <button class="login">Log in</button>
+    <button class="signup">Create an account!</button>
+    <button class="logout" style="display: none;">Log out</button>
+  </div>
+</header>
+
+  <!-- Content Wrapper -->
+<div class="content-wrapper">
+  <!-- Quick Access Tabs -->
+  <aside class="sidebar">
+    <h3>Quick Access Tabs</h3>
+    <button>Popular Games</button>
+    <button>New Releases</button>
+    <button>Top Rated</button>
+  </aside>
+
+  <!-- Featured Games -->
+  <main>
+    <section class="featured">
+      <h2>Featured Games</h2>
+      <div class="game-grid">
+        <div class="game">INSERT GAME PORTRAIT HERE</div>
+        <div class="game">INSERT GAME PORTRAIT HERE</div>
+        <div class="game">INSERT GAME PORTRAIT HERE</div>
+        <div class="game">INSERT GAME PORTRAIT HERE</div>
+        <div class="game">INSERT GAME PORTRAIT HERE</div>
+        <div class="game">INSERT GAME PORTRAIT HERE</div>
+      </div>
+      <p class="tagline">Your one stop for gaming information is here!</p>
+    </section>
+  </main>
+</div>
+
+  <footer>
+    <p>&copy; 2025 Project VAUYL</p>
+  </footer>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeLoginModal()">&times;</button>
+    
+    <h2>🎮 Log In</h2>
+    
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="loginEmail">Email</label>
+        <input 
+          type="email" 
+          id="loginEmail" 
+          placeholder="Enter your email" 
+          required
+        >
+        <div class="error-message" id="loginEmailError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input 
+          type="password" 
+          id="loginPassword" 
+          placeholder="Enter your password" 
+          required
+        >
+        <div class="error-message" id="loginPasswordError"></div>
+      </div>
+
+      <button type="submit" class="btn-submit">Log In</button>
+      <div class="error-message" id="loginError"></div>
+      <div class="success-message" id="loginSuccess"></div>
+    </form>
+
+    <div class="toggle-link">
+      Don't have an account? 
+      <a onclick="switchToSignup()">Sign up here</a>
+    </div>
+  </div>
+</div>
+
+<!-- Signup Modal -->
+<div id="signupModal" class="modal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeSignupModal()">&times;</button>
+    
+    <h2>🎮 Create Account</h2>
+    
+    <form id="signupForm" onsubmit="handleSignup(event)">
+      <div class="form-group">
+        <label for="signupUsername">Username</label>
+        <input 
+          type="text" 
+          id="signupUsername" 
+          placeholder="Choose a username" 
+          required
+        >
+        <div class="error-message" id="signupUsernameError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="signupEmail">Email</label>
+        <input 
+          type="email" 
+          id="signupEmail" 
+          placeholder="Enter your email" 
+          required
+        >
+        <div class="error-message" id="signupEmailError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="signupPassword">Password</label>
+        <input 
+          type="password" 
+          id="signupPassword" 
+          placeholder="At least 6 characters" 
+          required
+          minlength="6"
+        >
+        <div class="error-message" id="signupPasswordError"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="signupConfirm">Confirm Password</label>
+        <input 
+          type="password" 
+          id="signupConfirm" 
+          placeholder="Confirm your password" 
+          required
+        >
+        <div class="error-message" id="signupConfirmError"></div>
+      </div>
+
+      <button type="submit" class="btn-submit">Sign Up</button>
+      <div class="error-message" id="signupError"></div>
+      <div class="success-message" id="signupSuccess"></div>
+    </form>
+
+    <div class="toggle-link">
+      Already have an account? 
+      <a onclick="switchToLogin()">Log in here</a>
+    </div>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/auth-modal.js"></script>
+<script src="/js/script.js"></script>
+</body>
+</html>

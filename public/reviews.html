@@ -1,41 +1,45 @@
-<header>
-  <div class="logo">
-    <img src="images/VGB_Logo.png" alt="Logo" class="logo-img">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Game Bulletin - Reviews</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <header>
+      <div class="logo">
+    <img src="/images/VGB_Logo.png" alt="Logo" class="logo-img">
     VIDEO GAME BULLETIN
   </div>
-  <link rel="stylesheet" href="style.css">
-  <nav>
-    <a href="admin_index.html" class="active">DASHBOARD</a>
-    <a href="admin_calendar.html">CALENDAR</a>
-    <a href="admin_reviews.html">REVIEWS</a>
-  </nav>
-  <div class="auth">
-    <span class="welcome">Admin: VGBAdmin1</span>
-    <button class="logout">Log out</button>
-  </div>
-</header>
+    <nav>
+      <a href="index.html">HOME</a>
+      <a href="calendar.html">CALENDAR</a>
+      <a href="reviews.html" class="active">REVIEWS</a>
+    </nav>
+    <div class="auth">
+      <button class="login">Log in</button>
+      <button class="signup">Create an account!</button>
+    </div>
+  </header>
 
-<div class="content-wrapper">
-  <aside class="sidebar">
-    <h3>Admin Controls</h3>
-    <button>Manage Users</button>
-    <button>Approve Reviews</button>
-    <button>Edit Game Listings</button>
-    <button>View Reports</button>
-  </aside>
-
+  <!-- Reviews Content -->
   <main>
-    <section class="featured">
-      <h2>Admin Dashboard</h2>
-      <p>Welcome back, Admin. Manage content and users here.</p>
+    <section class="reviews">
+      <h2>Game Reviews</h2>
+      <p>Coming soon...</p>
     </section>
   </main>
-</div>
 
-<footer>
-  <p>&copy; 2025 Project VAUYL</p>
-</footer>
-<script src="script.js"></script>
+  <footer>
+    <p>&copy; 2025 Video Game Bulletin</p>
+  </footer>
+</body>
+</html>
+<script src="/js/api.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/script.js"></script>
 <script type="module">
 
   // Import the functions you need from the SDKs you need

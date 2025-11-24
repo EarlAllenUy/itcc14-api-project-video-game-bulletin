@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Game Bulletin - Reviews</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <header>
+    <div class="logo">
+      <img src="/images/VGB_Logo.png" alt="Logo" class="logo-img">
+      VIDEO GAME BULLETIN
+    </div>
+    <nav>
+      <a href="user_index.html">HOME</a>
+      <a href="user_calendar.html">CALENDAR</a>
+      <a href="user_reviews.html" class="active">REVIEWS</a>
+    </nav>
+    <div class="auth">
+      <span class="welcome">Welcome, VGB User!</span>
+      <button class="profile">Profile</button>
+      <button class="logout">Log out</button>
+    </div>
+  </header>
+
+  <div class="content-wrapper">
+    <aside class="sidebar">
+      <h3>Review Tools</h3>
+      <button onclick="showGamesListForComments()">📋 View All Games</button>
+      <button>My Reviews</button>
+      <button>Write a Review</button>
+    </aside>
+
+    <main>
+      <section class="reviews">
+        <h2>Game Reviews & Comments</h2>
+        <p>Share your thoughts on the latest releases and join the conversation!</p>
+
+        <!-- GAMES LIST FOR EASY ACCESS -->
+        <section id="gamesListSection" class="games-list-section" style="display: none;">
+          <h3>🎮 Available Games</h3>
+          <p>Click on a game to load its comments:</p>
+          <div id="gamesList" class="games-quick-list"></div>
+          <button onclick="hideGamesList()" class="btn-close-list">Close List</button>
+        </section>
+
+        <!-- COMMENTS SECTION -->
+        <section class="comments-section">
+          <h2>💬 Game Comments</h2>
+          <p>Discuss your favorite games with the community!</p>
+          
+          <div class="comment-form">
+            <label for="gameIdInput"><strong>Game ID:</strong></label>
+            <input 
+              type="text" 
+              id="gameIdInput" 
+              placeholder="Enter Game ID or click 'View All Games' to select"
+              value=""
+            >
+            <button onclick="loadCommentsForGame()" class="btn-load">📥 Load Comments</button>
+            
+            <label for="commentInput"><strong>Your Comment:</strong></label>
+            <textarea 
+              id="commentInput" 
+              placeholder="Share your thoughts about this game..." 
+              rows="4"
+            ></textarea>
+            
+            <button onclick="submitComment()" class="btn-submit">📝 Post Comment</button>
+          </div>
+
+          <h3>Recent Comments</h3>
+          <div id="commentsList" class="comments-list">
+            <p>Enter a Game ID and click "Load Comments" to see comments.</p>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Project VAUYL</p>
+  </footer>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/script.js"></script>
+  
+  <script>
+    // Load games list for easy comment access
+    async function showGamesListForComments() {
+      try {
+        const section = document.getElementById('gamesListSection');
+        const container = document.getElementById('gamesList');
+        
+        section.style.display = 'block';
+        container.innerHTML = '<p class="loading-comments">Loading games...</p>';
+        
+        const response = await fetch('/api/releases?limit=50');
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          container.innerHTML = '';
+          
+          data.data.forEach(game => {
+            const gameItem = document.createElement('div');
+            gameItem.className = 'game-list-item';
+            gameItem.innerHTML = `
+              <div class="game-item-content">
+                <strong>${game.title}</strong>
+                <span class="game-id">ID: ${game.game_id}</span>
+              </div>
+              <button onclick="selectGameForComments('${game.game_id}')" class="btn-select">
+                Select
+              </button>
+            `;
+            container.appendChild(gameItem);
+          });
+        }
+      } catch (error) {
+        console.error('Error loading games:', error);
+        document.getElementById('gamesList').innerHTML = 
+          '<p class="error-comments">Error loading games</p>';
+      }
+    }
+    
+    function selectGameForComments(gameId) {
+      document.getElementById('gameIdInput').value = gameId;
+      hideGamesList();
+      loadCommentsForGame();
+    }
+    
+    function hideGamesList() {
+      document.getElementById('gamesListSection').style.display = 'none';
+    }
+  </script>
+
+  <style>
+    /* Games List Styling */
+    .games-list-section {
+      background: #1a1a1a;
+      border: 2px solid #00ff00;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    
+    .games-list-section h3 {
+      color: #00ff00;
+      margin-bottom: 10px;
+    }
+    
+    .games-quick-list {
+      max-height: 400px;
+      overflow-y: auto;
+      margin: 15px 0;
+    }
+    
+    .game-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #2a2a2a;
+      border: 1px solid #00ff00;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .game-list-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    }
+    
+    .game-item-content {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    
+    .game-item-content strong {
+      color: #00ff00;
+      font-size: 1.1em;
+    }
+    
+    .game-id {
+      color: #999;
+      font-size: 0.9em;
+      font-family: monospace;
+    }
+    
+    .btn-select {
+      background: #00ff00;
+      color: #000;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-select:hover {
+      background: #00cc00;
+      transform: scale(1.05);
+    }
+    
+    .btn-close-list {
+      background: #ff3333;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+      margin-top: 10px;
+    }
+    
+    .btn-close-list:hover {
+      background: #cc0000;
+    }
+  </style>
+
+  <script type="module">
+    // Firebase initialization
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-analytics.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZYj7_mAMVkMawvOqX34d_y01ekvdBJMc",
+      authDomain: "video-game-bulletin.firebaseapp.com",
+      projectId: "video-game-bulletin",
+      storageBucket: "video-game-bulletin.firebasestorage.app",
+      messagingSenderId: "1031804164200",
+      appId: "1:1031804164200:web:5c937b7b173ed64797c3dd",
+      measurementId: "G-HNKSMG8QF8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+</body>
+</html>
